@@ -16,16 +16,19 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var stopRecordingButton: UIButton!
     
+    //load the view
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         stopRecordingButton.isEnabled = false
     }
 
+    //view to Appear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
+    // recording audio with name, file path and session
     @IBAction func recordAudio(_ sender: AnyObject) {
         // func
         audioIsRecording(true)
@@ -44,6 +47,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         audioRecorder.record()
     }
     
+    //stop the recording
     @IBAction func stopRecording(_ sender: Any) {
         
         // func
@@ -53,6 +57,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         try! audioSession.setActive(false)
     }
 
+    //check finish recording
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         if flag{
             performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
@@ -62,6 +67,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         
     }
     
+    // prepare before recording
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "stopRecording"{
             let playSoundsVC = segue.destination as! PlaySoundsViewController
@@ -70,19 +76,12 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         }
     }
     
-    func audioIsRecording(_ flag: Bool) {
-        if flag{
-            recordingLabel.text = "Recording in progress"
-            stopRecordingButton.isEnabled = true
-            recordButton.isEnabled = false
-            print("recording")
-        }else{
-            recordButton.isEnabled = true
-            stopRecordingButton.isEnabled = false
-            recordingLabel.text = "Tap to Record"
-            print("not recording")
-        }
-        
+    //check for audio recording
+    func audioIsRecording(_ isRecording: Bool) {
+            stopRecordingButton.isEnabled = isRecording
+            recordButton.isEnabled = !isRecording
+            recordingLabel.text = isRecording ? "Recording in progress" : "Tap to Record"
+           
     }
 }
 
